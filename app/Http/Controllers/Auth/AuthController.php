@@ -57,7 +57,7 @@ class AuthController extends Controller
         Auth::login($user);
 
         // Redireciona para a página de sucesso após o cadastro
-        return redirect()->route('sucesso')->with('success', 'Cadastro realizado com sucesso!');
+        return redirect()->route('post')->with('success', 'Cadastro realizado com sucesso!');
     }
 
     /**
@@ -84,7 +84,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // Redireciona para a página de postagem após o login
-            return redirect()->route('postagem')->with('success', 'Login realizado com sucesso!');
+            return redirect()->route('post')->with('success', 'Login realizado com sucesso!');
         }
 
         // Se falhar, retorna com mensagem de erro

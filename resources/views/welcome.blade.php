@@ -109,14 +109,15 @@
         <div class="container text-center">
             <p class="mb-2">&copy; {{ date('Y') }} Talentos Acessíveis. Todos os direitos reservados.</p>
             <p>
-                <a href="#">Sobre nós</a> | 
-                <a href="#">Contato</a> | 
+                <a href="#">Sobre nós</a> |
+                <a href="#">Contato</a> |
                 <a href="#">Termos de uso</a>
             </p>
         </div>
     </footer>
 
     <!-- Bootstrap 5 JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

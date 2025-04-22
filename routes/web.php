@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 
@@ -27,3 +28,6 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/post', [PostsController::class, 'index'])->name('post');
+Route::post('/curriculum/upload', [PostsController::class, 'uploadCurriculum'])->name('curriculum.upload');
