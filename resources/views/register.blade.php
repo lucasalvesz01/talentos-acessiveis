@@ -46,7 +46,7 @@
 <!-- Formulário de Cadastro -->
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="card shadow-sm border-0 rounded-4 mt-5">
                 <!-- Cabeçalho -->
                 <div class="card-header bg-transparent border-bottom text-center">
