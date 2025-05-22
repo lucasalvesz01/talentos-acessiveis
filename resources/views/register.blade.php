@@ -89,7 +89,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Campo de Email -->
                             <div class="mb-3">
                                 <label for="email" class="form-label fw-medium text-muted">Email</label>
                                 <div class="input-group">
@@ -105,7 +104,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Campo de Telefone -->
                             <div class="mb-3">
                                 <label for="telefone" class="form-label fw-medium text-muted">Telefone</label>
                                 <div class="input-group">
@@ -113,7 +111,7 @@
                                             class="fas fa-phone text-primary"></i></span>
                                     <input type="text"
                                            class="form-control form-control-lg border-start-0 @error('telefone') is-invalid @enderror"
-                                           id="telefone" name="telefone" value="{{ old('telefone') }}" required
+                                           id="telefone" name="telefone" maxlength="15" value="{{ old('telefone') }}" required
                                            placeholder="Ex.: (11) 98765-4321">
                                 </div>
                                 @error('telefone')
@@ -121,7 +119,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Campo de Data de Nascimento -->
                             <div class="mb-3">
                                 <label for="data_nascimento" class="form-label fw-medium text-muted">Data de
                                     Nascimento</label>
@@ -138,7 +135,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Campo de Sexo -->
                             <div class="mb-3">
                                 <label for="sexo" class="form-label fw-medium text-muted">Sexo</label>
                                 <select class="form-select form-select-lg @error('sexo') is-invalid @enderror" id="sexo"
@@ -157,73 +153,147 @@
                                 @enderror
                             </div>
 
-                            <!-- Campo de Tipo de Deficiência -->
                             <div class="mb-3">
-                                <label for="disability_type" class="form-label fw-medium text-muted">Tipo de
-                                    Deficiência</label>
-                                <select
-                                    class="form-select form-select-lg @error('disability_type') is-invalid @enderror"
-                                    id="disability_type" name="disability_type" required>
-                                    <option value="" disabled selected>Selecione uma opção</option>
-                                    <option value="visual" {{ old('disability_type') == 'visual' ? 'selected' : '' }}>
-                                        Visual
-                                    </option>
-                                    <option
-                                        value="auditiva" {{ old('disability_type') == 'auditiva' ? 'selected' : '' }}>
-                                        Auditiva
-                                    </option>
-                                    <option value="fisica" {{ old('disability_type') == 'fisica' ? 'selected' : '' }}>
-                                        Física
-                                    </option>
-                                    <option
-                                        value="intelectual" {{ old('disability_type') == 'intelectual' ? 'selected' : '' }}>
-                                        Intelectual
-                                    </option>
-                                    <option value="nenhuma" {{ old('disability_type') == 'nenhuma' ? 'selected' : '' }}>
-                                        Outros
-                                    </option>
+                                <label for="disability_type" class="form-label fw-medium text-muted">Tipo de Deficiência</label>
+                                <select class="form-select form-select-lg @error('disability_type') is-invalid @enderror"
+                                        id="disability_type" name="disability_type" required>
+                                    <option value="" disabled {{ old('disability_type') ? '' : 'selected' }}>Selecione uma opção</option>
+                                    <option value="visual" {{ old('disability_type') == 'visual' ? 'selected' : '' }}>Visual</option>
+                                    <option value="auditiva" {{ old('disability_type') == 'auditiva' ? 'selected' : '' }}>Auditiva</option>
+                                    <option value="motora" {{ old('disability_type') == 'motora' ? 'selected' : '' }}>Motora</option>
+                                    <option value="outra" {{ old('disability_type') == 'outra' ? 'selected' : '' }}>Outra</option>
                                 </select>
                                 @error('disability_type')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <!-- Campo de Senha -->
                             <div class="mb-3">
+                                <label for="interest_area" class="form-label fw-medium text-muted">Área de Interesse</label>
+                                <select class="form-select form-select-lg @error('interest_area') is-invalid @enderror"
+                                        id="interest_area" name="interest_area">
+                                    <option value="" disabled {{ old('interest_area') ? '' : 'selected' }}>Selecione uma opção</option>
+                                    <option value="Tecnologia" {{ old('interest_area') == 'Tecnologia' ? 'selected' : '' }}>Tecnologia</option>
+                                    <option value="Saúde" {{ old('interest_area') == 'Saúde' ? 'selected' : '' }}>Saúde</option>
+                                    <option value="Educação" {{ old('interest_area') == 'Educação' ? 'selected' : '' }}>Educação</option>
+                                    <option value="Finanças" {{ old('interest_area') == 'Finanças' ? 'selected' : '' }}>Finanças</option>
+                                    <option value="Entretenimento" {{ old('interest_area') == 'Entretenimento' ? 'selected' : '' }}>Entretenimento</option>
+                                    <option value="Esportes" {{ old('interest_area') == 'Esportes' ? 'selected' : '' }}>Esportes</option>
+                                    <option value="Ciência" {{ old('interest_area') == 'Ciência' ? 'selected' : '' }}>Ciência</option>
+                                    <option value="Arte" {{ old('interest_area') == 'Arte' ? 'selected' : '' }}>Arte</option>
+                                </select>
+                                @error('interest_area')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="linkedin" class="form-label fw-medium text-muted">LinkedIn</label>
+                                <input type="url"
+                                       class="form-control form-control-lg @error('linkedin') is-invalid @enderror"
+                                       id="linkedin" name="linkedin" value="{{ old('linkedin') }}"
+                                       placeholder="https://linkedin.com/in/seu-perfil">
+                                @error('linkedin')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="work_availability" class="form-label fw-medium text-muted">Disponibilidade para Trabalho</label>
+                                <select class="form-select form-select-lg @error('work_availability') is-invalid @enderror"
+                                        id="work_availability" name="work_availability" required>
+                                    <option value="" disabled {{ old('work_availability') ? '' : 'selected' }}>Selecione uma opção</option>
+                                    <option value="presencial" {{ old('work_availability') == 'presencial' ? 'selected' : '' }}>Presencial</option>
+                                    <option value="remoto" {{ old('work_availability') == 'remoto' ? 'selected' : '' }}>Remoto</option>
+                                    <option value="híbrido" {{ old('work_availability') == 'híbrido' ? 'selected' : '' }}>Híbrido</option>
+                                </select>
+                                @error('work_availability')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3 position-relative">
                                 <label for="password" class="form-label fw-medium text-muted">Senha</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i
-                                            class="fas fa-lock text-primary"></i></span>
+                                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-primary"></i></span>
                                     <input type="password"
                                            class="form-control form-control-lg border-start-0 @error('password') is-invalid @enderror"
                                            id="password" name="password" required placeholder="Mínimo de 8 caracteres">
+                                    <button type="button" class="btn btn-light border-start-0" id="togglePassword" tabindex="-1" style="width: 45px;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
                                 </div>
                                 @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <!-- Campo de Confirmação de Senha -->
-                            <div class="mb-3">
-                                <label for="password_confirmation" class="form-label fw-medium text-muted">Confirmar
-                                    Senha</label>
+                            <div class="mb-3 position-relative">
+                                <label for="password_confirmation" class="form-label fw-medium text-muted">Confirmar Senha</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i
-                                            class="fas fa-lock text-primary"></i></span>
+                                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-primary"></i></span>
                                     <input type="password" class="form-control form-control-lg border-start-0"
                                            id="password_confirmation" name="password_confirmation" required
                                            placeholder="Repita sua senha">
+                                    <button type="button" class="btn btn-light border-start-0" id="togglePasswordConfirm" tabindex="-1" style="width: 45px;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
                                 </div>
                             </div>
 
-                            <!-- Botão de Cadastrar -->
                             <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill mt-3">
                                 <i class="fas fa-user-plus me-2"></i> Cadastrar
                             </button>
                         </form>
                     </div>
+                    <script>
+                        function mascaraTelefone(input) {
+                            let valor = input.value.replace(/\D/g, '');
 
-                    <!-- Rodapé -->
+                            if (valor.length > 11) valor = valor.slice(0, 11);
+
+                            if (valor.length > 10) {
+                                valor = valor.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+                            } else if (valor.length > 5) {
+                                valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+                            } else if (valor.length > 2) {
+                                valor = valor.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+                            }else if (valor.length > 10) {
+                                valor = valor.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                            }else {
+                                valor = valor.replace(/^(\d*)/, '($1');
+                            }
+
+                            input.value = valor;
+                        }
+
+                        document.getElementById('telefone').addEventListener('input', function() {
+                            mascaraTelefone(this);
+                        });
+
+                        function toggleSenha(idInput, idToggle) {
+                            const inputSenha = document.getElementById(idInput);
+                            const toggleBtn = document.getElementById(idToggle);
+
+                            toggleBtn.addEventListener('click', () => {
+                                if (inputSenha.type === "password") {
+                                    inputSenha.type = "text";
+                                    toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                                } else {
+                                    inputSenha.type = "password";
+                                    toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+                                }
+                            });
+                        }
+
+                        // Chama toggleSenha para os dois campos de senha
+                        toggleSenha('password', 'togglePassword');
+                        toggleSenha('password_confirmation', 'togglePasswordConfirm');
+
+
+
+                    </script>
+
                     <div class="card-footer bg-transparent border-top text-center py-3">
                         <p class="small mb-0 text-muted">
                             Já tem uma conta?
