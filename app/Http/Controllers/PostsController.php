@@ -11,12 +11,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\File;
 use App\Models\User;
+use Spatie\PdfToImage\Pdf;
 
 class PostsController extends \Illuminate\Routing\Controller
 {
     public function index(): Factory|\Illuminate\View\View
     {
-        $curriculums = Storage::files('curriculums');
+        $curriculums = Storage::files('public/curriculums');
         return view('post', compact('curriculums'));
     }
 
@@ -33,16 +34,38 @@ class PostsController extends \Illuminate\Routing\Controller
         $user = Auth::user();
 
         try {
+            // Apaga currículo antigo (se existir)
             if ($user->curriculum) {
-                $oldFilePath = 'curriculums/' . $user->curriculum;
+                $oldFilePath = 'public/curriculums/' . $user->curriculum;
                 if (Storage::exists($oldFilePath)) {
                     Storage::delete($oldFilePath);
+                }
+
+                // Apaga thumbnail antiga (se existir)
+                $oldThumbPath = 'public/curriculums/thumbnails/' . pathinfo($user->curriculum, PATHINFO_FILENAME) . '.jpg';
+                if (Storage::exists($oldThumbPath)) {
+                    Storage::delete($oldThumbPath);
                 }
             }
 
             $file = $request->file('curriculum');
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('curriculums', $filename);
+            $file->storeAs('public/curriculums', $filename);
+
+            // Se for PDF, gera thumbnail
+            if ($file->getClientOriginalExtension() === 'pdf') {
+                $pdfPath = storage_path('app/public/curriculums/' . $filename);
+
+                $thumbnailPath = storage_path('app/public/curriculums/thumbnails/');
+                if (!file_exists($thumbnailPath)) {
+                    mkdir($thumbnailPath, 0755, true);
+                }
+
+                $thumbnailName = pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
+
+                $pdf = new Pdf($pdfPath);
+                $pdf->setPage(1)->saveImage($thumbnailPath . DIRECTORY_SEPARATOR . $thumbnailName);
+            }
 
             $user->update([
                 'curriculum' => $filename,
@@ -50,7 +73,7 @@ class PostsController extends \Illuminate\Routing\Controller
 
             return back()->with('success', 'Currículo enviado com sucesso!');
         } catch (\Exception $e) {
-            \Log::error('Erro ao enviar currículo: ' . $e->getMessage());
+            \Log::error('Erro ao enviar currículo: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
             return back()->with('error', 'Erro ao enviar o currículo. Tente novamente.');
         }
     }
