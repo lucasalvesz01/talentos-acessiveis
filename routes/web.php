@@ -17,10 +17,11 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/post', [PostsController::class, 'index'])->name('post');
-Route::post('/upload-curriculum', [PostsController::class, 'uploadCurriculum'])->name('curriculum.upload');
-Route::get('/download-curriculum', [PostsController::class, 'downloadCurriculum'])->name('curriculum.download');
-
+Route::middleware('auth')->group(function () {
+    Route::get('/post', [PostsController::class, 'index'])->name('post');
+    Route::post('/upload-curriculum', [PostsController::class, 'uploadCurriculum'])->name('curriculum.upload');
+    Route::get('/download-curriculum', [PostsController::class, 'downloadCurriculum'])->name('curriculum.download');
+});
 Route::get('/feeds', [FeedController::class, 'index'])->name('feeds.index');
 
 Route::get('/download-curriculum/{id}', [PostsController::class, 'downloadUserCurriculum'])->name('curriculum.download.user');

@@ -188,15 +188,64 @@
                                 @enderror
                             </div>
 
-                            <!-- Campo de Senha -->
+
                             <div class="mb-3">
+                                <label for="interest_area" class="form-label fw-medium text-muted">Área de Interesse</label>
+                                <select class="form-select form-select-lg @error('interest_area') is-invalid @enderror" id="interest_area" name="interest_area">
+                                    <option value="" disabled {{ old('interest_area') ? '' : 'selected' }}>Selecione uma opção</option>
+                                    <option value="Tecnologia" {{ old('interest_area') == 'Tecnologia' ? 'selected' : '' }}>Tecnologia</option>
+                                    <option value="Saúde" {{ old('interest_area') == 'Saúde' ? 'selected' : '' }}>Saúde</option>
+                                    <option value="Educação" {{ old('interest_area') == 'Educação' ? 'selected' : '' }}>Educação</option>
+                                    <option value="Finanças" {{ old('interest_area') == 'Finanças' ? 'selected' : '' }}>Finanças</option>
+                                    <option value="Entretenimento" {{ old('interest_area') == 'Entretenimento' ? 'selected' : '' }}>Entretenimento</option>
+                                    <option value="Esportes" {{ old('interest_area') == 'Esportes' ? 'selected' : '' }}>Esportes</option>
+                                    <option value="Ciência" {{ old('interest_area') == 'Ciência' ? 'selected' : '' }}>Ciência</option>
+                                    <option value="Arte" {{ old('interest_area') == 'Arte' ? 'selected' : '' }}>Arte</option>
+                                </select>
+                                @error('interest_area')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Campo de LinkedIn -->
+                            <div class="mb-3">
+                                <label for="linkedin" class="form-label fw-medium text-muted">LinkedIn</label>
+                                <input type="url"
+                                       class="form-control form-control-lg @error('linkedin') is-invalid @enderror"
+                                       id="linkedin"
+                                       name="linkedin"
+                                       value="{{ old('linkedin') }}"
+                                       placeholder="https://linkedin.com/in/seu-perfil">
+                                @error('linkedin')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Campo de Disponibilidade de Trabalho -->
+                            <div class="mb-3">
+                                <label for="work_availability" class="form-label fw-medium text-muted">Disponibilidade de Trabalho</label>
+                                <select class="form-select form-select-lg @error('work_availability') is-invalid @enderror" id="work_availability" name="work_availability">
+                                    <option value="" disabled {{ old('work_availability') ? '' : 'selected' }}>Selecione uma opção</option>
+                                    <option value="presencial" {{ old('work_availability') == 'presencial' ? 'selected' : '' }}>Presencial</option>
+                                    <option value="remoto" {{ old('work_availability') == 'remoto' ? 'selected' : '' }}>Remoto</option>
+                                    <option value="híbrido" {{ old('work_availability') == 'híbrido' ? 'selected' : '' }}>Híbrido</option>
+                                </select>
+                                @error('work_availability')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Campo de Senha -->
+                            <div class="mb-3 position-relative">
                                 <label for="password" class="form-label fw-medium text-muted">Senha</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i
-                                            class="fas fa-lock text-primary"></i></span>
+                                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-primary"></i></span>
                                     <input type="password"
                                            class="form-control form-control-lg border-start-0 @error('password') is-invalid @enderror"
                                            id="password" name="password" required placeholder="Mínimo de 8 caracteres">
+                                    <button type="button" class="btn btn-outline-secondary border-start-0" id="togglePassword" tabindex="-1" style="width: 45px;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
                                 </div>
                                 @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -204,17 +253,19 @@
                             </div>
 
                             <!-- Campo de Confirmação de Senha -->
-                            <div class="mb-3">
-                                <label for="password_confirmation" class="form-label fw-medium text-muted">Confirmar
-                                    Senha</label>
+                            <div class="mb-3 position-relative">
+                                <label for="password_confirmation" class="form-label fw-medium text-muted">Confirmar Senha</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i
-                                            class="fas fa-lock text-primary"></i></span>
+                                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-primary"></i></span>
                                     <input type="password" class="form-control form-control-lg border-start-0"
                                            id="password_confirmation" name="password_confirmation" required
                                            placeholder="Repita sua senha">
+                                    <button type="button" class="btn btn-outline-secondary border-start-0" id="togglePasswordConfirm" tabindex="-1" style="width: 45px;">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
                                 </div>
                             </div>
+
 
                             <!-- Botão de Cadastrar -->
                             <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill mt-3">
@@ -236,4 +287,52 @@
             </div>
         </div>
     </div>
+    <script>
+        // Função para aplicar máscara de telefone
+        function mascaraTelefone(input) {
+            let valor = input.value.replace(/\D/g, ''); // Remove tudo que não é número
+
+            if (valor.length > 11) valor = valor.slice(0, 11);
+
+            if (valor.length > 10) {
+                // (99) 99999-9999
+                valor = valor.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+            } else if (valor.length > 5) {
+                // (99) 9999-9999
+                valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+            } else if (valor.length > 2) {
+                // (99) 9999
+                valor = valor.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+            } else {
+                valor = valor.replace(/^(\d*)/, '($1');
+            }
+
+            input.value = valor;
+        }
+
+        // Adiciona listener para o campo telefone
+        document.getElementById('telefone').addEventListener('input', function() {
+            mascaraTelefone(this);
+        });
+
+        // Toggle para mostrar/esconder senha
+        function toggleSenha(idInput, idToggle) {
+            const inputSenha = document.getElementById(idInput);
+            const toggleBtn = document.getElementById(idToggle);
+
+            toggleBtn.addEventListener('click', () => {
+                if (inputSenha.type === "password") {
+                    inputSenha.type = "text";
+                    toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                } else {
+                    inputSenha.type = "password";
+                    toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+                }
+            });
+        }
+
+        // Chama toggleSenha para os dois campos de senha
+        toggleSenha('password', 'togglePassword');
+        toggleSenha('password_confirmation', 'togglePasswordConfirm');
+    </script>
 @endsection

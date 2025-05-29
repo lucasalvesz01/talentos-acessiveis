@@ -24,7 +24,7 @@ class PostsController extends \Illuminate\Routing\Controller
     public function uploadCurriculum(Request $request): RedirectResponse
     {
         $validator = Validator::make($request->all(), [
-            'curriculum' => 'required|file|mimes:pdf,doc,docx|max:2048',
+            'curriculum' => 'required|file|mimes:pdf|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -34,14 +34,12 @@ class PostsController extends \Illuminate\Routing\Controller
         $user = Auth::user();
 
         try {
-            // Apaga currículo antigo (se existir)
             if ($user->curriculum) {
                 $oldFilePath = 'public/curriculums/' . $user->curriculum;
                 if (Storage::exists($oldFilePath)) {
                     Storage::delete($oldFilePath);
                 }
 
-                // Apaga thumbnail antiga (se existir)
                 $oldThumbPath = 'public/curriculums/thumbnails/' . pathinfo($user->curriculum, PATHINFO_FILENAME) . '.jpg';
                 if (Storage::exists($oldThumbPath)) {
                     Storage::delete($oldThumbPath);
@@ -52,7 +50,6 @@ class PostsController extends \Illuminate\Routing\Controller
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('public/curriculums', $filename);
 
-            // Se for PDF, gera thumbnail
             if ($file->getClientOriginalExtension() === 'pdf') {
                 $pdfPath = storage_path('app/public/curriculums/' . $filename);
 

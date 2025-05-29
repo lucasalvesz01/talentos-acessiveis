@@ -19,7 +19,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'data_nascimento',
+        'sexo',
+        'disability_type',
         'curriculum',
+        'interest_area',
+        'linkedin',
+        'work_availability',
     ];
 
     /**
@@ -39,5 +45,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'data_nascimento' => 'date', // Cast para tipo date
     ];
 }

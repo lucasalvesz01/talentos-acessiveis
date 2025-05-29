@@ -17,7 +17,7 @@
                         <div class="card w-100 shadow border-0 rounded-4">
                             @php
                                 $imageName = pathinfo($user->curriculum, PATHINFO_FILENAME) . '.jpg';
-                                $imagePath = asset('storage/curriculums/thumbnails/' . $imageName);
+                                $imagePath = asset('/storage/curriculums/thumbnails/' . $imageName);
                             @endphp
 
                             <div class="d-flex justify-content-center align-items-center bg-light" style="height: 200px;">
@@ -26,15 +26,41 @@
 
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title text-primary mb-2">{{ $user->name }}</h5>
+
                                 <p class="card-text mb-1"><strong>Email:</strong> {{ $user->email }}</p>
+
                                 <p class="card-text mb-1">
-                                    <strong>Tipo de deficiência:</strong> {{ $user->disability_type ?? 'Não informado' }}
-                                </p>                                <div class="mt-3 text-end">
+                                    <strong>Sexo:</strong> {{ ucfirst($user->sexo) ?? 'Não informado' }}
+                                </p>
+
+                                <p class="card-text mb-1">
+                                    <strong>Tipo de deficiência:</strong> {{ ucfirst($user->disability_type) ?? 'Não informado' }}
+                                </p>
+
+                                <p class="card-text mb-1">
+                                    <strong>Área de interesse:</strong> {{ $user->interest_area ?? 'Não informado' }}
+                                </p>
+
+                                <p class="card-text mb-1">
+                                    <strong>LinkedIn:</strong>
+                                    @if($user->linkedin)
+                                        <a href="{{ $user->linkedin }}" target="_blank" rel="noopener noreferrer">{{ $user->linkedin }}</a>
+                                    @else
+                                        Não informado
+                                    @endif
+                                </p>
+
+                                <p class="card-text mb-1">
+                                    <strong>Disponibilidade de trabalho:</strong> {{ ucfirst($user->work_availability) ?? 'Não informado' }}
+                                </p>
+
+                                <div class="mt-3 text-end">
                                     <a href="{{ route('curriculum.download', ['id' => $user->id]) }}" class="btn btn-outline-success btn-sm">
                                         Baixar Currículo
                                     </a>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 @endforeach
