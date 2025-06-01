@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('curriculum')->nullable();
-            $table->date('data_nascimento')->nullable();
+            $table->date('birthdate')->nullable();
             $table->enum('sexo', ['masculino', 'feminino', 'outro'])->nullable();
             $table->enum('disability_type', ['visual', 'auditiva', 'fisica', 'intelectual', 'nenhuma'])->nullable();
             $table->enum('interest_area', ['Tecnologia', 'Saúde', 'Educação', 'Finanças', 'Entretenimento', 'Esportes', 'Ciência', 'Arte'])->nullable();

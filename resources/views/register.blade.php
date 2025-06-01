@@ -53,7 +53,6 @@
                         <h3 class="fw-bold text-primary">{{ __('Cadastro') }}</h3>
                         <p class="text-muted small">Crie sua conta para acessar o sistema</p>
                     </div>
-
                     <!-- Corpo do Cartão -->
                     <div class="card-body p-4">
                         <!-- Mensagens de Erro -->
@@ -288,9 +287,8 @@
         </div>
     </div>
     <script>
-        // Função para aplicar máscara de telefone
         function mascaraTelefone(input) {
-            let valor = input.value.replace(/\D/g, ''); // Remove tudo que não é número
+            let valor = input.value.replace(/\D/g, '');
 
             if (valor.length > 11) valor = valor.slice(0, 11);
 
@@ -310,12 +308,10 @@
             input.value = valor;
         }
 
-        // Adiciona listener para o campo telefone
         document.getElementById('telefone').addEventListener('input', function() {
             mascaraTelefone(this);
         });
 
-        // Toggle para mostrar/esconder senha
         function toggleSenha(idInput, idToggle) {
             const inputSenha = document.getElementById(idInput);
             const toggleBtn = document.getElementById(idToggle);
@@ -331,8 +327,41 @@
             });
         }
 
-        // Chama toggleSenha para os dois campos de senha
         toggleSenha('password', 'togglePassword');
         toggleSenha('password_confirmation', 'togglePasswordConfirm');
+
+        // Função para validar idade >= 18 anos
+        function validarIdade(dataNascimento) {
+            const hoje = new Date();
+            const nascimento = new Date(dataNascimento);
+            if (isNaN(nascimento)) return false;
+
+            let idade = hoje.getFullYear() - nascimento.getFullYear();
+            const mes = hoje.getMonth() - nascimento.getMonth();
+
+            if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+                idade--;
+            }
+
+            return idade >= 18;
+        }
+
+        const form = document.querySelector('form.needs-validation');
+
+        form.addEventListener('submit', function (event) {
+            const dataInput = document.getElementById('data_nascimento');
+            const dataVal = dataInput.value;
+
+            if (!validarIdade(dataVal)) {
+                event.preventDefault(); // impede o envio do formulário
+                event.stopPropagation();
+
+
+                dataInput.classList.add('is-invalid');
+                dataInput.focus();
+            } else {
+                dataInput.classList.remove('is-invalid');
+            }
+        });
     </script>
 @endsection

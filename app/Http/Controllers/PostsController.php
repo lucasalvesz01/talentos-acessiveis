@@ -4,71 +4,59 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\File;
+use App\Http\Requests\UploadCurriculumRequest;
 use App\Models\User;
+use Illuminate\View\View;
 use Spatie\PdfToImage\Pdf;
 
 class PostsController extends \Illuminate\Routing\Controller
 {
-    public function index(): Factory|\Illuminate\View\View
+    public function index(): Factory|View
     {
         $curriculums = Storage::files('public/curriculums');
         return view('post', compact('curriculums'));
     }
 
-    public function uploadCurriculum(Request $request): RedirectResponse
+    public function uploadCurriculum(UploadCurriculumRequest $request): RedirectResponse
     {
-        $validator = Validator::make($request->all(), [
-            'curriculum' => 'required|file|mimes:pdf|max:2048',
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
         $user = Auth::user();
 
         try {
+            // Remove arquivos antigos, se existirem
             if ($user->curriculum) {
-                $oldFilePath = 'public/curriculums/' . $user->curriculum;
-                if (Storage::exists($oldFilePath)) {
-                    Storage::delete($oldFilePath);
-                }
-
-                $oldThumbPath = 'public/curriculums/thumbnails/' . pathinfo($user->curriculum, PATHINFO_FILENAME) . '.jpg';
-                if (Storage::exists($oldThumbPath)) {
-                    Storage::delete($oldThumbPath);
-                }
+                Storage::delete('public/curriculums/' . $user->curriculum);
+                Storage::delete('public/curriculums/thumbnails/' . pathinfo($user->curriculum, PATHINFO_FILENAME) . '.jpg');
             }
 
             $file = $request->file('curriculum');
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            // Salva arquivo PDF
             $file->storeAs('public/curriculums', $filename);
 
+            // Cria thumbnail da primeira página do PDF
             if ($file->getClientOriginalExtension() === 'pdf') {
                 $pdfPath = storage_path('app/public/curriculums/' . $filename);
+                $thumbnailDir = storage_path('app/public/curriculums/thumbnails');
 
-                $thumbnailPath = storage_path('app/public/curriculums/thumbnails/');
-                if (!file_exists($thumbnailPath)) {
-                    mkdir($thumbnailPath, 0755, true);
+                if (!File::exists($thumbnailDir)) {
+                    Storage::makeDirectory('public/curriculums/thumbnails');
                 }
 
                 $thumbnailName = pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
 
                 $pdf = new Pdf($pdfPath);
-                $pdf->setPage(1)->saveImage($thumbnailPath . DIRECTORY_SEPARATOR . $thumbnailName);
+                $pdf->setPage(1)->saveImage($thumbnailDir . DIRECTORY_SEPARATOR . $thumbnailName);
             }
 
-            $user->update([
-                'curriculum' => $filename,
-            ]);
+            // Atualiza o nome do arquivo no usuário
+            $user->update(['curriculum' => $filename]);
 
-            return back()->with('success', 'Currículo enviado com sucesso!');
+            return redirect()->route('feeds.index')->with('success', 'Currículo enviado com sucesso!');
         } catch (\Exception $e) {
             \Log::error('Erro ao enviar currículo: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
             return back()->with('error', 'Erro ao enviar o currículo. Tente novamente.');
@@ -92,9 +80,6 @@ class PostsController extends \Illuminate\Routing\Controller
         return Response::download($filePath);
     }
 
-    /**
-     * Faz o download do currículo de um usuário específico.
-     */
     public function downloadUserCurriculum($id): RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
     {
         $user = User::find($id);

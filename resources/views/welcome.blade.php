@@ -83,6 +83,17 @@
                 opacity: 1;
             }
         }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 20px 0;
+            color: white;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -111,8 +122,8 @@
             <p class="mb-2">&copy; {{ date('Y') }} Talentos Acessíveis. Todos os direitos reservados.</p>
             <p>
                 <a href="#">Sobre nós</a> |
-                <a href="#">Contato</a> |
-                <a href="#">Termos de uso</a>
+                <a href="#">Contato</a>
+{{--                <a href="#">Termos de uso</a>--}}
             </p>
         </div>
     </footer>
