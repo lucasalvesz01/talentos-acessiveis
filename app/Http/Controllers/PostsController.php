@@ -26,24 +26,25 @@ class PostsController extends \Illuminate\Routing\Controller
         $user = Auth::user();
 
         try {
-            // Remove arquivos antigos, se existirem
             if ($user->curriculum) {
                 Storage::delete('public/curriculums/' . $user->curriculum);
                 Storage::delete('public/curriculums/thumbnails/' . pathinfo($user->curriculum, PATHINFO_FILENAME) . '.jpg');
             }
 
+
             $file = $request->file('curriculum');
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-            // Salva arquivo PDF
+            if ($file->getMimeType() !== 'application/pdf') {
+                return back()->with('error', 'Arquivo deve ser um PDF válido.');
+            }
             $file->storeAs('public/curriculums', $filename);
 
-            // Cria thumbnail da primeira página do PDF
             if ($file->getClientOriginalExtension() === 'pdf') {
                 $pdfPath = storage_path('app/public/curriculums/' . $filename);
                 $thumbnailDir = storage_path('app/public/curriculums/thumbnails');
 
-                if (!File::exists($thumbnailDir)) {
+                if (!Storage::exists('public/curriculums/thumbnails')) {
                     Storage::makeDirectory('public/curriculums/thumbnails');
                 }
 
@@ -53,7 +54,6 @@ class PostsController extends \Illuminate\Routing\Controller
                 $pdf->setPage(1)->saveImage($thumbnailDir . DIRECTORY_SEPARATOR . $thumbnailName);
             }
 
-            // Atualiza o nome do arquivo no usuário
             $user->update(['curriculum' => $filename]);
 
             return redirect()->route('feeds.index')->with('success', 'Currículo enviado com sucesso!');
@@ -73,7 +73,7 @@ class PostsController extends \Illuminate\Routing\Controller
 
         $filePath = storage_path('app/public/curriculums/' . $user->curriculum);
 
-        if (!File::exists($filePath)) {
+        if (!Storage::exists('public/curriculums/' . $user->curriculum)) {
             return back()->with('error', 'Arquivo não encontrado.');
         }
 
