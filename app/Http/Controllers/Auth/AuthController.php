@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -17,7 +20,7 @@ class AuthController extends Controller
     /**
      * Mostra o formulário de registro.
      */
-    public function showRegistrationForm()
+    public function showRegistrationForm(): Factory|View|Application
     {
         return view('register'); // Exibe a página de registro
     }
@@ -27,29 +30,27 @@ class AuthController extends Controller
      */
     public function register(Request $request): RedirectResponse
     {
-        // Validação dos dados do formulário
         $validator = Validator::make($request->all(), [
-//            'name' => ['required', 'string', 'max:255'],
-//            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-//            'phone' => ['required', 'string', 'max:20', 'regex:/^[\d\s\-\(\)]+$/'],
-//            'birthdate' => ['required', 'date', 'before:-18 years'], // Pelo menos 18 anos
-//            'gender' => ['required', 'string', 'in:male,female,other'],
-//            'disability_type' => ['required', 'string', 'in:visual,auditory,physical,intellectual,none'],
-//            'password' => [
-//                'required',
-//                'confirmed',
-//            ],
-//        ], [
-//            'birthdate.before' => 'Você deve ter pelo menos 18 anos para se registrar.',
+            'nome' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'telefone' => ['required', 'string', 'max:20', 'regex:/^[\d\s\-\(\)]+$/'],
+            'data_nascimento' => ['required', 'date', 'before:-18 years'],
+            'sexo' => ['required', 'string', 'in:male,female,other'],
+            'disability_type' => ['required', 'string', 'in:visual,auditory,physical,intellectual,none'],
+            'password' => ['required', 'string', 'confirmed'],
+            'interest_area' => ['nullable', 'string', 'max:255'],
+            'linkedin' => ['nullable', 'url'],
+            'work_availability' => ['nullable', 'string', 'max:255'],
+        ], [
+            'data_nascimento.before' => 'Você deve ter pelo menos 18 anos para se registrar.',
+            'email.unique' => 'Este e-mail já está em uso.',
+            'password.confirmed' => 'As senhas não coincidem.',
         ]);
-        // Se a validação falhar, redireciona com erros
+
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->route('register.form')->withErrors($validator)->withInput();
         }
 
-        // Cria o usuário no banco de dados
         $user = User::create([
             'name' => $request->nome,
             'email' => $request->email,
@@ -71,31 +72,27 @@ class AuthController extends Controller
     /**
      * Mostra o formulário de login.
      */
-    public function showLoginForm()
+    public function showLoginForm(): Factory|View|Application
     {
-        return view('login'); // Exibe a página de login
+        return view('login');
     }
 
     /**
      * Processa o formulário de login.
      */
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse
     {
-        // Validação dos dados do formulário
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        // Tenta autenticar o usuário
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Redireciona para a página de postagem após o login
             return redirect()->route('post')->with('success', 'Login realizado com sucesso!');
         }
 
-        // Se falhar, retorna com mensagem de erro
         return back()->withErrors([
             'email' => 'As credenciais fornecidas não correspondem aos nossos registros.',
         ])->withInput();
@@ -104,15 +101,13 @@ class AuthController extends Controller
     /**
      * Realiza o logout do usuário.
      */
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
 
-        // Invalida a sessão e regenera o token CSRF
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        // Redireciona para a página inicial após o logout
         return redirect()->route('welcome')->with('success', 'Logout realizado com sucesso!');
     }
 }

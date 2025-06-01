@@ -293,13 +293,10 @@
             if (valor.length > 11) valor = valor.slice(0, 11);
 
             if (valor.length > 10) {
-                // (99) 99999-9999
                 valor = valor.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
             } else if (valor.length > 5) {
-                // (99) 9999-9999
                 valor = valor.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
             } else if (valor.length > 2) {
-                // (99) 9999
                 valor = valor.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
             } else {
                 valor = valor.replace(/^(\d*)/, '($1');
@@ -330,7 +327,6 @@
         toggleSenha('password', 'togglePassword');
         toggleSenha('password_confirmation', 'togglePasswordConfirm');
 
-        // Função para validar idade >= 18 anos
         function validarIdade(dataNascimento) {
             const hoje = new Date();
             const nascimento = new Date(dataNascimento);
@@ -353,11 +349,12 @@
             const dataVal = dataInput.value;
 
             if (!validarIdade(dataVal)) {
-                event.preventDefault(); // impede o envio do formulário
+                event.preventDefault();
+
                 event.stopPropagation();
 
-
                 dataInput.classList.add('is-invalid');
+
                 dataInput.focus();
             } else {
                 dataInput.classList.remove('is-invalid');
