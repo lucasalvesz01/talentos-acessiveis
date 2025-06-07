@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Talentos Acessíveis</title>
+    <link rel="icon" href="{{ asset('Gemini_Generated_Image_xuk5b4xuk5b4xuk5.png') }}" type="image/x-icon" />
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -82,6 +83,17 @@
                 opacity: 1;
             }
         }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 20px 0;
+            color: white;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -109,14 +121,15 @@
         <div class="container text-center">
             <p class="mb-2">&copy; {{ date('Y') }} Talentos Acessíveis. Todos os direitos reservados.</p>
             <p>
-                <a href="#">Sobre nós</a> | 
-                <a href="#">Contato</a> | 
-                <a href="#">Termos de uso</a>
+                <a href="#">Sobre nós</a> |
+                <a href="#">Contato</a>
+{{--                <a href="#">Termos de uso</a>--}}
             </p>
         </div>
     </footer>
 
     <!-- Bootstrap 5 JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
