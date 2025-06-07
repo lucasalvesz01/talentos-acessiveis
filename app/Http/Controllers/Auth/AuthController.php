@@ -35,11 +35,11 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'telefone' => ['required', 'string', 'max:20', 'regex:/^[\d\s\-\(\)]+$/'],
             'data_nascimento' => ['required', 'date', 'before:-18 years'],
-            'sexo' => ['required', 'string', 'in:male,female,other'],
-            'disability_type' => ['required', 'string', 'in:visual,auditory,physical,intellectual,none'],
+            'sexo' => ['required', 'string', 'in:masculino,feminino,outro'],
+            'disability_type' => ['required', 'string', 'in:visual,auditiva,fisica,intelectual,nenhuma'],
             'password' => ['required', 'string', 'confirmed'],
             'interest_area' => ['nullable', 'string', 'max:255'],
-            'linkedin' => ['nullable', 'url'],
+            'linkedin' => ['nullable'],
             'work_availability' => ['nullable', 'string', 'max:255'],
         ], [
             'data_nascimento.before' => 'Você deve ter pelo menos 18 anos para se registrar.',
@@ -48,7 +48,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('register.form')->withErrors($validator)->withInput();
+            return redirect()->route('register')->withErrors($validator)->withInput();
         }
 
         $user = User::create([
